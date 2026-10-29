@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+from pathlib import Path
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
@@ -34,8 +35,8 @@ class LaunchArguments(LaunchArgumentsBase):
     end_effector: DeclareLaunchArgument = SEAArmArgs.end_effector
     ft_sensor: DeclareLaunchArgument = SEAArmArgs.ft_sensor
     use_sim_time: DeclareLaunchArgument = CommonArgs.use_sim_time
-    arm_model: DeclareLaunchArgument = DeclareLaunchArgument(
-        'arm_model', default_value='pal-sea-arm-standalone',
+    arm_type: DeclareLaunchArgument = DeclareLaunchArgument(
+        'arm_type', default_value='pal-sea-arm-standalone',
         choices=['pal-sea-arm-standalone', 'tiago-pro', 'tiago-sea', 'tiago-sea-dual'],
         description='The arm model')
 
@@ -51,12 +52,26 @@ def start_rviz(context, *args, **kwargs):
     end_effector = read_launch_argument('end_effector', context)
     ft_sensor = read_launch_argument('ft_sensor', context)
 
+    # The controller files use 'no-ee' as suffix for the arm without end effector
     hw_suffix = get_pal_sea_arm_hw_suffix(
-        end_effector=end_effector,
+        end_effector='no-ee' if end_effector == 'no-end-effector' else end_effector,
         ft_sensor=ft_sensor
     )
 
-    robot_description_semantic = (f'config/srdf/pal_sea_arm{hw_suffix}.srdf')
+    # The SRDF is generated from the xacro, as in move_group.launch.py
+    srdf_file_path = Path(
+        os.path.join(
+            get_package_share_directory('pal_sea_arm_moveit_config'),
+            'config', 'srdf',
+            'pal_sea_arm.srdf.xacro',
+        )
+    )
+
+    srdf_input_args = {
+        'arm_type': read_launch_argument('arm_type', context),
+        'end_effector': end_effector,
+        'ft_sensor': ft_sensor,
+    }
 
     # Trajectory Execution Functionality
     moveit_simple_controllers_path = (
@@ -65,7 +80,7 @@ def start_rviz(context, *args, **kwargs):
     # The robot description is read from the topic /robot_description if the parameter is empty
     moveit_config = (
         MoveItConfigsBuilder('pal_sea_arm')
-        .robot_description_semantic(file_path=robot_description_semantic)
+        .robot_description_semantic(file_path=srdf_file_path, mappings=srdf_input_args)
         .robot_description_kinematics(file_path=os.path.join('config', 'kinematics_kdl.yaml'))
         .trajectory_execution(moveit_simple_controllers_path)
         .planning_pipelines(pipelines=['ompl'])
@@ -84,7 +99,6 @@ def start_rviz(context, *args, **kwargs):
         arguments=['-d', rviz_full_config],
         emulate_tty=True,
         parameters=[
-            {},
             moveit_config.robot_description,
             moveit_config.robot_description_semantic,
             moveit_config.planning_pipelines,
