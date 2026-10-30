@@ -2,8 +2,8 @@
 Changelog for package pal_sea_arm_moveit_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.8 (2026-10-30)
+------------------
 * restore changes about robuki
 * fix moveit rviz launch, ati collisions and CHOMP config
 * add sensor config file to elimnate octomap msgs: 'No 3D sensor plugin(s) defined for octomap updates' and 'Resolution not specified for Octomap. Assuming resolution = 0.1 instead'
