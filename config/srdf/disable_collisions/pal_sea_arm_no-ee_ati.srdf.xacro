@@ -3,6 +3,10 @@
 
     <xacro:include filename="$(find pal_sea_arm_moveit_config)/config/srdf/disable_collisions/pal_sea_arm_no-ee.srdf.xacro" />
 
+    <!-- The ATI sensor is rigidly mounted on arm_7_link: these pairs never move relative to each other -->
+    <disable_collisions link1="arm_7_link" link2="wrist_ft_sensor_base_link" reason="Adjacent"/>
+    <disable_collisions link1="arm_7_link" link2="wrist_ft_sensor_link" reason="Never"/>
+    <disable_collisions link1="arm_7_link" link2="wrist_ft_tool_link" reason="Never"/>
     <disable_collisions link1="wrist_ft_sensor_base_link" link2="wrist_ft_sensor_link" reason="Adjacent"/>
     <disable_collisions link1="wrist_ft_sensor_base_link" link2="wrist_ft_tool_link" reason="Adjacent"/>
     <disable_collisions link1="wrist_ft_sensor_link" link2="wrist_ft_tool_link" reason="Never"/>

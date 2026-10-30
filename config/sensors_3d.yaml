@@ -1,0 +1,7 @@
+# The name of this file shouldn't be changed, or else the Setup Assistant won't detect it
+# The arm has no 3D sensor: the empty sensor_plugin makes MoveIt skip the octomap updater
+sensors:
+  - default_sensor
+octomap_resolution: 0.1
+default_sensor:
+  sensor_plugin: ""
