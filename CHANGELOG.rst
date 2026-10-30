@@ -2,6 +2,17 @@
 Changelog for package pal_sea_arm_moveit_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* restore changes about robuki
+* fix moveit rviz launch, ati collisions and CHOMP config
+* add sensor config file to elimnate octomap msgs: 'No 3D sensor plugin(s) defined for octomap updates' and 'Resolution not specified for Octomap. Assuming resolution = 0.1 instead'
+* add files for robuki FT sensor with pen-gripper
+* add files for ati with pen-gripper
+* add files for ati with pal-pro-gripper
+* add file for pen-gripper-ee
+* Contributors: francescodorazio, susannamastromauro
+
 1.0.7 (2026-04-27)
 ------------------
 * Fix prefix module move_group
